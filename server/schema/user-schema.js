@@ -11,15 +11,21 @@ const userSchema = gql`
   type Query {
     me: User
   }
+
   input SignUpInput {
     name: String!
+    email: String!
+    password: String!
+  }
+    
+  input LoginInput {
     email: String!
     password: String!
   }
 
   type Mutation {
     register(signUpInput: SignUpInput!): User!
-    login(email: String!, password: String!): User!
+    login(loginInput: LoginInput): User!
   }
 `;
 

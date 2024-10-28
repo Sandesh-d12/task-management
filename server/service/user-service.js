@@ -21,7 +21,8 @@ const signUp = async ({ name, email, password }) => {
 
 
 // Log In function
-const logIn = async (_, { email, password }) => {
+const logIn = async ({ email, password }) => {
+  console.log(email, password)
     const user = await User.findOne({ email });
     if (!user) throw new Error('User not found');
 
@@ -30,9 +31,9 @@ const logIn = async (_, { email, password }) => {
     if (!validPassword) throw new Error('Incorrect password');
 
     // Create a JWT token
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET || 'SECRET_KEY', { expiresIn: '1h' });
+    const token = jwt.sign({ id: user.id },  'SECRET_KEY', { expiresIn: '1h' });
 
-    return { id: user.id, email: user.email, token };
+    return { id: user.id, email: user.email, token, name:user.name };
 }
 
 // signUp("ram", "sss", "123")
