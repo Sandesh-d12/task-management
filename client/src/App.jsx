@@ -1,11 +1,11 @@
 import "./App.css";
 import { AllRoute } from "./Route";
 
-
 function App() {
-
   return (
-  <AllRoute />
+    <>
+      <AllRoute />
+    </>
   );
 }
 

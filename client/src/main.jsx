@@ -1,12 +1,15 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink  } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
+import { ApolloClient, InMemoryCache, ApolloProvider  } from '@apollo/client';
 import { BrowserRouter } from "react-router-dom";
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import store, { persistor } from './redux/store.js';
 import './index.css';
 import App from './App.jsx';
+import { Toaster } from 'react-hot-toast';
 
-// Function to create Apollo Client
+
 const createApolloClient = () => {
   const cache = new InMemoryCache();
 
@@ -21,36 +24,27 @@ const createApolloClient = () => {
     },
   };
 
-  const authLink = setContext((_, { headers }) => {
-    const token = localStorage.getItem('token');
-    return {
-      headers: {
-        ...headers,
-        authorization: token ? `Bearer ${token}` : '',
-      }
-    }
-  });
-
-  const httpLink = createHttpLink({
-    uri: 'http://localhost:9000/graphql',
-  });
-
   return new ApolloClient({
-    link: authLink.concat(httpLink),
+    uri: 'http://localhost:9000/graphql',
     cache,
     defaultOptions,
   });
 };
 
-// Initialize Apollo Client
 const client = createApolloClient();
+
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
     <ApolloProvider client={client}>
       <BrowserRouter>
+      <Toaster />
         <App />
       </BrowserRouter>
     </ApolloProvider>
+    </PersistGate>
+    </Provider>
   </StrictMode>
 );

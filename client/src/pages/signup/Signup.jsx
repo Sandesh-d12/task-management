@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAuth } from '../../api/gql/hooks/useAuth';
+import { useAuth } from '../../api/hooks/useAuth';
 
 const Signup = () => {
   const [email, setEmail] = useState('');
