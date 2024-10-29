@@ -1,11 +1,11 @@
-const { addTask, getTasks } = require('../service/task-service');
+const { addTask, getTasks } = require("../service/task-service");
 
 const taskResolver = {
   Query: {
     getTasks: async () => await getTasks(),
   },
   Mutation: {
-    addTask: async (_, { title, content }) => await addTask(title, content),
+    addTask: async (_, { taskInput }) => await addTask(taskInput),
   },
 };
 

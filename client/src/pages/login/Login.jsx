@@ -33,6 +33,7 @@ const Login= () => {
           <Form className="">
             <CustomInput type="email" label="Email" name="email" />
             <CustomInput type="password" label="Password" name="password" />
+            <div>Don't have account? <a href="/signUp" style={{color:'blue'}}>Sign Up</a></div>
             <button
               type='submit'
               className="inline-block rounded border border-indigo-600 bg-indigo-600 px-6 py-2 text-sm font-medium text-white"

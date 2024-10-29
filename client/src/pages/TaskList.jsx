@@ -1,57 +1,28 @@
-import React from 'react';
-import { useQuery } from '@apollo/client';
-import { GET_TASKS } from '../api/gql/queries/task';
-import Layout from '../components/Layout';
+import React from "react";
+import Layout from "../components/Layout";
+import { DataTable } from "../components/Table";
+import { useGetTask } from "../api/hooks/useTask";
+import { Card } from "../components/card/TaskCard";
 
 function TaskList() {
-  const { loading, error, data } = useQuery(GET_TASKS);
-
+  const { loading, error, allTask } = useGetTask();
+  // const tableData = React.useMemo(() => data?.getTasks  [data]);
   return (
     <Layout>
-      <div className='flex flex-col items-center justify-center'>
-      <h2>Task List</h2>
-      <ul>
-        {data?.getTasks.map((task) => (
-          <li key={task.id}>
-            <strong>{task.title}</strong>: {task.content}
-          </li>
-        ))}
-      </ul>
-      <ul>
-        {data?.getTasks.map((task) => (
-          <li key={task.id}>
-            <strong>{task.title}</strong>: {task.content}
-          </li>
-        ))}
-      </ul>
-      <ul>
-        {data?.getTasks.map((task) => (
-          <li key={task.id}>
-            <strong>{task.title}</strong>: {task.content}
-          </li>
-        ))}
-      </ul>
-      <ul>
-        {data?.getTasks.map((task) => (
-          <li key={task.id}>
-            <strong>{task.title}</strong>: {task.content}
-          </li>
-        ))}
-      </ul>
-      <ul>
-        {data?.getTasks.map((task) => (
-          <li key={task.id}>
-            <strong>{task.title}</strong>: {task.content}
-          </li>
-        ))}
-      </ul>
-      <ul>
-        {data?.getTasks.map((task) => (
-          <li key={task.id}>
-            <strong>{task.title}</strong>: {task.content}
-          </li>
-        ))}
-      </ul>
+      <div className="flex flex-col items-center justify-center">
+        <h2>Task List</h2>
+        <DataTable tableData={allTask} />
+        {/* {allTask?.map((item, index) => (
+          <Card
+            title={item.title}
+            id={1}
+            name={"Admin"}
+            priority={item.priority}
+            time={item.estimation}
+            type={item.issueType}
+            key={index}
+          />
+        ))} */}
       </div>
     </Layout>
   );

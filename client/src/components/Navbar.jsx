@@ -10,7 +10,7 @@ export default function Navbar({children}) {
     },
     {
       title: "Add Task",
-      href: "/addTask",
+      href: "/add-task",
     },
   ];
 

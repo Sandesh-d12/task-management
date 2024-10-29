@@ -4,8 +4,17 @@ const taskSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
     content: { type: String, required: true },
+    priority: {
+      type: String,
+      required: true,
+    },
+    assignee: { type: String, required: true },
+    estimation: { type: String, required: true },
+    taskState: { type: String, required: true },
+    issueType: { type: String, required: true },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Task", taskSchema);
+const Task = mongoose.model("Task", taskSchema);
+module.exports = Task;
