@@ -15,6 +15,7 @@ const taskSchema = gql`
   }
 
   input TaskInput {
+    id: String
     title: String!
     content: String!
     priority: String!
@@ -24,11 +25,21 @@ const taskSchema = gql`
     issueType: String!
   }
 
-    type AddTaskResponse {
+  type AddTaskResponse {
     success: Boolean!
     message: String!
-    task: Task  
+    task: Task
     error: String
+  }
+
+  type DeleteTaskResponse {
+    success: Boolean!
+    message: String!
+    error: String
+  }
+
+  input DeleteInput {
+    id: String!
   }
 
   type Query {
@@ -37,9 +48,9 @@ const taskSchema = gql`
 
   type Mutation {
     addTask(taskInput: TaskInput!): AddTaskResponse!
+    updateTask(taskInput: TaskInput!): AddTaskResponse!
+    deleteTask(deleteInput: DeleteInput!): DeleteTaskResponse!
   }
 `;
 
 module.exports = taskSchema;
-
-
