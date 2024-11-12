@@ -6,6 +6,7 @@ import CustomInput from "../components/input/CustomInput";
 import Layout from "../components/Layout.jsx";
 import Button from "../components/button/Button.jsx";
 import { Select } from "../components/input/Select.jsx";
+import ConfirmModal from "../components/modal/Modal.jsx";
 
 export const validationSchema = Yup.object({
   title: Yup.string().required("Title is required"),
@@ -14,8 +15,7 @@ export const validationSchema = Yup.object({
   assignee: Yup.string().required("Assignee is required"),
   estimation: Yup.string().required("Estimation is required"),
   taskState: Yup.string().required("Task State is required"),
-  issueType: Yup.string()
-    .required("Issue Type is required")
+  issueType: Yup.string().required("Issue Type is required"),
 });
 
 export const issueOptions = [
@@ -81,10 +81,11 @@ export const priorityOptions = [
     label: "Minor",
     value: "minor",
   },
-]
+];
 
 function AddTask() {
   const { handleCreateTask, loading, error } = useCreateTask();
+  const [open, setOpen] = useState(false);
   const initialValues = {
     title: "",
     content: "",
@@ -94,7 +95,9 @@ function AddTask() {
     taskState: "",
     issueType: "",
   };
-  const handleSubmit = (values, { resetForm }) => {
+  const [data, setData] = useState(initialValues);
+  const handleSubmit = (values) => {
+    setOpen(true);
     const {
       title,
       content,
@@ -104,7 +107,7 @@ function AddTask() {
       taskState,
       issueType,
     } = values;
-    handleCreateTask({
+    setData({
       title,
       content,
       priority,
@@ -113,7 +116,15 @@ function AddTask() {
       taskState,
       issueType,
     });
-    resetForm();
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleConfirm = () => {
+    setOpen(false);
+    handleCreateTask(data);
   };
 
   return (
@@ -135,7 +146,7 @@ function AddTask() {
                 name="taskState"
                 label="Task State"
               />
-               <Select
+              <Select
                 option={priorityOptions}
                 name="priority"
                 label="Priority"
@@ -145,7 +156,14 @@ function AddTask() {
                 name="issueType"
                 label="Issue Type"
               />
-              <Button />
+              <Button handleClick={handleSubmit} />
+              <ConfirmModal
+                isOpen={open}
+                title="Confirm Add"
+                message="Are you sure you want to Add this task?"
+                onClose={handleClose}
+                onConfirm={handleConfirm}
+              />
             </Form>
           )}
         </Formik>

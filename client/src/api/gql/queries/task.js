@@ -37,3 +37,35 @@ export const CREATE_TASK = gql`
     }
   }
 `;
+
+export const UPDATE_TASK = gql`
+  mutation ($taskInput: TaskInput!) {
+    updateTask(taskInput: $taskInput) {
+    success
+    message
+    task {
+      id
+      title
+      content
+      priority
+      assignee
+      estimation
+      taskState
+      issueType
+      createdAt
+      updatedAt
+    }
+    error
+    }
+  }
+`;
+
+export const DELETE_TASK = gql`
+  mutation ($deleteInput: DeleteInput!) {
+    deleteTask(deleteInput: $deleteInput) {
+    success
+    message
+    error
+    }
+  }
+`;

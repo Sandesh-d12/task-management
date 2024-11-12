@@ -2,7 +2,8 @@ import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 
-const ConfirmationModal = ({ isOpen, onClose, title, message, onConfirm }) => {
+const ConfirmModal = ({ isOpen, onClose, title, message, onConfirm }) => {
+  console.log(isOpen)
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={onClose}>
@@ -53,7 +54,7 @@ const ConfirmationModal = ({ isOpen, onClose, title, message, onConfirm }) => {
                     className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
                     onClick={() => {
                       onConfirm();
-                      onClose();
+                      // onClose();
                     }}
                   >
                     Confirm
@@ -68,4 +69,4 @@ const ConfirmationModal = ({ isOpen, onClose, title, message, onConfirm }) => {
   );
 };
 
-export default ConfirmationModal;
+export default ConfirmModal;

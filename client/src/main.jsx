@@ -1,31 +1,30 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import { ApolloClient, InMemoryCache, ApolloProvider  } from '@apollo/client';
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import { BrowserRouter } from "react-router-dom";
-import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
-import store, { persistor } from './redux/store.js';
-import './index.css';
-import App from './App.jsx';
-import { Toaster } from 'react-hot-toast';
-
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import store, { persistor } from "./redux/store.js";
+import "./index.css";
+import App from "./App.jsx";
+import { Toaster } from "react-hot-toast";
 
 const createApolloClient = () => {
   const cache = new InMemoryCache();
 
   const defaultOptions = {
     watchQuery: {
-      fetchPolicy: 'no-cache',
-      errorPolicy: 'ignore',
+      fetchPolicy: "cache-and-network",
+      errorPolicy: "ignore",
     },
     query: {
-      fetchPolicy: 'no-cache',
-      errorPolicy: 'all',
+      fetchPolicy: "cache-and-network",
+      errorPolicy: "all",
     },
   };
 
   return new ApolloClient({
-    uri: 'http://localhost:9000/graphql',
+    uri: "http://localhost:9000/graphql",
     cache,
     defaultOptions,
   });
@@ -33,18 +32,17 @@ const createApolloClient = () => {
 
 const client = createApolloClient();
 
-
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
       <PersistGate persistor={persistor}>
-    <ApolloProvider client={client}>
-      <BrowserRouter>
-      <Toaster />
-        <App />
-      </BrowserRouter>
-    </ApolloProvider>
-    </PersistGate>
+        <ApolloProvider client={client}>
+          <BrowserRouter>
+            <Toaster />
+            <App />
+          </BrowserRouter>
+        </ApolloProvider>
+      </PersistGate>
     </Provider>
   </StrictMode>
 );

@@ -6,7 +6,7 @@ import { Card } from "../components/card/TaskCard";
 
 function TaskList() {
   const { loading, error, allTask } = useGetTask();
-  // const tableData = React.useMemo(() => data?.getTasks  [data]);
+ React.useEffect(() => {}, [allTask]);
   return (
     <Layout>
       <div className="flex flex-col items-center justify-center">
