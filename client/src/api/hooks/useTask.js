@@ -44,7 +44,7 @@ export const useCreateTask = () => {
 export const useGetTask = () => {
   const { data, loading, error } = useQuery(GET_TASKS);
   const dispatch = useDispatch();
-  const allTask = data ? JSON.parse(JSON.stringify(data?.getTasks)) : null;
+  const allTask = data ? data.getTasks : null;
   dispatch(setTasks(allTask));
   return { allTask, loading, error };
 };

@@ -1,151 +1,246 @@
-import React, { useState, useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { useNavigate } from "react-router-dom";
-import { convertTimeToDate } from "../utils";
-import { useDeleteTask } from "../api/hooks/useTask";
+  useTable,
+  useSortBy,
+  useGlobalFilter,
+  useFilters,
+  usePagination,
+  useRowSelect,
+} from "react-table";
 import ConfirmModal from "./modal/Modal";
+import { useNavigate } from "react-router-dom";
+import "./table.css";
+import GlobalFilter from "./input/GlobalFilter";
+import ColumnFilter from "./ColumnFilter";
+import Checkbox from "./input/Checkbox";
 import Trash from "./icons/Trash";
 import Pencil from "./icons/Pencil";
+import { useDeleteTask } from "../api/hooks/useTask";
 
 
-const columnHelper = createColumnHelper();
-
-export function DataTable({ tableData }) {
+function Table({ d }) {
   const navigate = useNavigate();
   const { handleDeleteTask } = useDeleteTask();
   const [open, setOpen] = useState(null);
   const [id, setId] = useState("");
   const handleDelete = () => {
-    setOpen(false)
+    setOpen(false);
     handleDeleteTask({ id });
   };
 
-  const columns = [
-    columnHelper.accessor("title", {
-      header: () => "Title",
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor("content", {
-      header: () => "Description",
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor("priority", {
-      header: () => "Priority",
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor("assignee", {
-      header: () => "Assignee",
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor("estimation", {
-      header: () => "Estimation",
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor("taskState", {
-      header: () => "State",
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor("issueType", {
-      header: () => "Issue Type",
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor("createdAt", {
-      header: () => "Created At",
-      cell: (info) => convertTimeToDate(info.getValue()),
-    }),
-    columnHelper.accessor("actions", {
-      header: () => "Actions",
-      cell: ({ row }) => (
-        <div style={{ display: "flex", justifyContent: "center", gap:"3rem" }}>
+
+  const COLUMNS = [
+    // {
+    //     Header:"S.N",
+    //     // accessor:d.length,
+    //     disableFilters: true,
+    //     disableSortBy:true,
+
+    // },
+    {
+      Header: "Title",
+      accessor: "title",
+      // Filter:ColumnFilter,
+      disableFilters: true,
+    },
+    {
+      Header: "Description",
+      accessor: "content",
+      // Filter:ColumnFilter //use defaultFilters in table componen
+    },
+    {
+      Header: "Priority",
+      accessor: "priority",
+      // Filter:ColumnFilter
+    },
+    {
+      Header: "assignee",
+      accessor: "assignee",
+      // Filter:ColumnFilter
+    },
+    {
+      Header: "Issue Type",
+      accessor: "issueType",
+      // Cell:({})=>{
+      //   <Sort />
+      // }
+      // Filter:ColumnFilter
+    },
+    {
+      Header: "Actions",
+      disableSortBy: true,
+      Cell: ({ row }) => (
+        <div style={{ display: "flex", justifyContent: "center", gap: "3rem" }}>
           <button
             onClick={() => {
               setOpen(true);
               setId(row?.original?.id);
             }}
           >
-      <Trash />
+            <Trash />
           </button>
           <button onClick={() => navigate(`update-task/${row?.original?.id}`)}>
-          <Pencil />
+            <Pencil />
           </button>
         </div>
       ),
-    }),
+    },
   ];
 
-  const data = React.useMemo(() => {
-    return tableData || [];
-  }, [tableData]);
+  const columns = useMemo(() => COLUMNS, []);
+  const data = useMemo(() => d || [], [d]);
+  const defaultColumn = useMemo(() => {
+    return {
+      Filter: ColumnFilter,
+    };
+  }, []);
+
   console.log(data);
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
+  const tableInstance = useTable(
+    {
+      columns,
+      data,
+      defaultColumn,
+      //   manualPagination: true,
+    },
+    useFilters,
+    useGlobalFilter,
+    useSortBy,
+    usePagination,
+    useRowSelect,
+    (hooks) => {
+      hooks.visibleColumns.push((columns) => {
+        return [
+          {
+            id: "selection",
+            Header: ({ getToggleAllRowsSelectedProps }) => (
+              <Checkbox {...getToggleAllRowsSelectedProps} />
+            ),
+            disableSortBy:true,
+            Cell: ({ row }) => (
+              <Checkbox {...row.getToggleRowSelectedProps()} />
+            ),
+          },
+          ...columns,
+        ];
+      });
+    }
+  );
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    page,
+    prepareRow,
+    state,
+    setGlobalFilter,
+    nextPage,
+    canNextPage,
+    canPreviousPage,
+    pageOptions,
+    previousPage,
+    selectedFlatRows, //it will give selected flat arrow
+  } = tableInstance;
+
+  const { globalFilter, pageIndex } = state;
 
   return (
-    <div className="p-2">
-      <table className="w-full border-collapse border border-gray-300 rounded-lg shadow-md">
-        <thead className="bg-blue-500 text-white">
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
+    <div style={{ maxWidth: "1328px", width: "100%" }}>
+      <div style={{ display: "flex", gap: "3rem" }}>
+        <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
+      </div>
+      <table {...getTableProps()}>
+        <thead>
+          {headerGroups.map((headerGroup, index) => (
+            <tr key={index} {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((col, index) => (
                 <th
-                  className="p-5 border border-gray-200 font-semibold"
-                  key={header.id}
-                  style={{ width: "150px" }}
+                  key={index}
+                  {...col.getHeaderProps()}
                 >
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
+                  {col.render("Header")}
+                 {!col.disableSortBy && <button
+                    onClick={col.getSortByToggleProps().onClick}
+                    className="ml-2 p-1 bg-blue-500 text-white rounded"
+                    title={`Sort by ${col.render("Header")}`}
+                  >
+                    {col.isSorted ? (
+                      col.isSortedDesc ? (
+                        <span>&#x25BC; </span>
+                      ) : (
+                        <span>&#x25B2; </span>
+                      )
+                    ) : (
+                      <span>Sort &#x21C5;</span>
+                    )}
+                  </button>
+}
                 </th>
               ))}
+          
             </tr>
           ))}
         </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row, index) => (
-            <tr
-              key={row.id}
-              className={
-                index % 2 === 0
-                  ? "bg-gray-100 cursor-pointer z-0"
-                  : "bg-white cursor-pointer z-0"
-              }
-            >
-              {row.getVisibleCells().map((cell) => (
-                <td
-                  key={cell.id}
-                  className="p-5 border border-gray-200 text-center"
-                  style={{
-                    width: "150px",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
+        <tbody {...getTableBodyProps()}>
+          {page.map((row, index) => {
+            prepareRow(row);
+            return (
+              <tr {...row.getRowProps()} key={index}>
+                {row.cells.map((cell, index) => {
+                  return (
+                    <td {...cell.getCellProps()} key={index}>
+                      {cell.render("Cell")}
+                    </td>
+                  );
+                })}
+             
+              </tr>
+            );
+          })}
         </tbody>
-        <ConfirmModal
-          isOpen={open}
-          onClose={() => setOpen(false)}
-          title="Confirm Delete"
-          message="Are you sure you want to delete this task?"
-          onConfirm={handleDelete}
-        />
       </table>
+      <ConfirmModal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        title="Confirm Delete"
+        message="Are you sure you want to delete this task?"
+        onConfirm={handleDelete}
+      />
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "1rem",
+          padding: "20px",
+        }}
+      >
+        <span>Page </span>
+        <strong>
+          {pageIndex + 1} of {pageOptions.length}
+        </strong>
+        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+          Prev
+        </button>
+        <button onClick={() => nextPage()} disabled={!canNextPage}>
+          Next
+        </button>
+      </div>
+      <pre>
+        <code>
+          {JSON.stringify(
+            {
+              selectedRows: selectedFlatRows.map((row) => row.original),
+            },
+
+            null,
+            2
+          )}
+        </code>
+      </pre>
     </div>
   );
 }
+
+export default Table;

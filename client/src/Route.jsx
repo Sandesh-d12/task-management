@@ -7,6 +7,7 @@ import Login from "./pages/login/Login";
 import Signup from "./pages/signup/Signup";
 import Navbar from "./components/Navbar";
 import { UpdateTask } from "./pages/UpdateTask";
+import Table from "./components/Table";
 
 export function AllRoute() {
   const token = useSelector((state) => state.auth.token);
@@ -17,6 +18,7 @@ export function AllRoute() {
           <Route element={<Navbar />} >
           <Route path="/" element={<TaskList />} />
           <Route path="/add-task" element={<AddTask />} />
+          <Route path="/test" element={<Table  />} />
           <Route path="/update-task/:id" element={<UpdateTask />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Route>

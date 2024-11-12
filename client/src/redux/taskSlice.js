@@ -7,7 +7,6 @@ const taskSlice = createSlice({
   },
   reducers: {
     setTasks:(state, action) => {
-        console.log(state, action.payload)
       state.data = action.payload;
     }
   },
