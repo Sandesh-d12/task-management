@@ -69,3 +69,14 @@ export const DELETE_TASK = gql`
     }
   }
 `;
+
+
+export const UPDATE_TASK_STATE = gql`
+  mutation ($updateStateInput: TaskStateInput!) {
+    updateTasksState(updateStateInput: $updateStateInput) {
+      success
+      message
+      error
+    }
+  }
+`;

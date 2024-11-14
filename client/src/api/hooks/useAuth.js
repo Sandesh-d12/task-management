@@ -1,11 +1,14 @@
-import { useMutation } from "@apollo/client";
-import { LOGIN_USER, REGISTER_USER } from "../gql/queries/user";
+import { useMutation, useQuery } from "@apollo/client";
+import { useNavigate } from "react-router-dom";
+import { GET_USERS, LOGIN_USER, REGISTER_USER } from "../gql/queries/user";
 import { useDispatch } from "react-redux";
 import { setToken, setUser } from "../../redux/authSlice";
 import { toast } from "react-hot-toast";
+import { setUsers } from "../../redux/userSlice";
 
 export const useAuth = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate()
 
   const [login, { data: userData, loading: loginLoading, error: loginError }] =
     useMutation(LOGIN_USER);
@@ -20,7 +23,6 @@ export const useAuth = () => {
           },
         },
       });
-      console.log(userData);
         const token = data?.login?.token;
         dispatch(setToken(token));
         dispatch(setUser(data?.login));
@@ -42,7 +44,9 @@ export const useAuth = () => {
           },
         },
       });
+
     } catch (err) {
+      toast.error(err.message);
       console.error("Registration error:", err);
     }
   };
@@ -57,4 +61,13 @@ export const useAuth = () => {
     error,
     userData,
   };
+};
+
+export const useGetUsers = () => {
+  const { data, loading, error } = useQuery(GET_USERS);
+  const dispatch = useDispatch();
+
+const users = data ?  data?.getAll : null;
+  dispatch(setUsers(users));
+  return { users, loading, error };
 };

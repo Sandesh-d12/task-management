@@ -4,6 +4,7 @@ const userResolver = require('./userResolver')
 const resolvers = {
   Query: {
     ...taskResolver.Query,
+    ...userResolver.Query
   },
   Mutation: {
     ...taskResolver.Mutation,

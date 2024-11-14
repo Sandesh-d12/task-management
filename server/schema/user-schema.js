@@ -17,12 +17,14 @@ const userSchema = gql`
     email: String!
     password: String!
   }
-    
+
   input LoginInput {
     email: String!
     password: String!
   }
-
+  type Query {
+    getAll: [User]
+  }
   type Mutation {
     register(signUpInput: SignUpInput!): User!
     login(loginInput: LoginInput): User!

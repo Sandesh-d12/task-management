@@ -5,8 +5,12 @@ import CompanyLogo from '../assets/CompanyLogo';
 export default function Navbar({children}) {
   const navData = [
     {
-      title: "Task List",
-      href: "/",
+      title: "Pending Tasks",
+      href: "/pending-tasks",
+    },
+    {
+      title: "Completed Tasks",
+      href: "/completed-tasks",
     },
     {
       title: "Add Task",

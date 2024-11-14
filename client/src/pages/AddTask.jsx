@@ -7,7 +7,7 @@ import Layout from "../components/Layout.jsx";
 import Button from "../components/button/Button.jsx";
 import { Select } from "../components/input/Select.jsx";
 import ConfirmModal from "../components/modal/Modal.jsx";
-
+import { useSelector } from "react-redux";
 export const validationSchema = Yup.object({
   title: Yup.string().required("Title is required"),
   content: Yup.string().required("Content is required"),
@@ -85,6 +85,8 @@ export const priorityOptions = [
 
 function AddTask() {
   const { handleCreateTask, loading, error } = useCreateTask();
+  const users = useSelector((state) => state.users.data);
+
   const [open, setOpen] = useState(false);
   const initialValues = {
     title: "",
@@ -139,8 +141,16 @@ function AddTask() {
             <Form className="w-1/6">
               <CustomInput type="text" label="title" name="title" />
               <CustomInput type="text" label="content" name="content" />
-              <CustomInput type="text" label="assignee" name="assignee" />
+              {/* <CustomInput type="text" label="assignee" name="assignee" /> */}
               <CustomInput type="text" label="estimation" name="estimation" />
+              <Select
+                option={users?.map((user) => ({
+                  label: user?.name,
+                  value: user?.name,
+                }))}
+                name="assignee"
+                label="Assignee"
+              />
               <Select
                 option={taskOptions}
                 name="taskState"

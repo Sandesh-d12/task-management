@@ -3,7 +3,6 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 
 const ConfirmModal = ({ isOpen, onClose, title, message, onConfirm }) => {
-  console.log(isOpen)
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={onClose}>

@@ -1,4 +1,4 @@
-const { addTask, getTasks, updateTask, deleteTask } = require("../service/task-service");
+const { addTask, getTasks, updateTask, deleteTask, updateTasksState } = require("../service/task-service");
 
 const taskResolver = {
   Query: {
@@ -7,7 +7,8 @@ const taskResolver = {
   Mutation: {
     addTask: async (_, { taskInput }) => await addTask(taskInput),
     updateTask: async(_,{taskInput}) => await updateTask(taskInput),
-    deleteTask: async(_, {deleteInput}) => await deleteTask(deleteInput)
+    deleteTask: async(_, {deleteInput}) => await deleteTask(deleteInput),
+    updateTasksState : async(_, {updateStateInput}) => await updateTasksState(updateStateInput)
   },
 };
 

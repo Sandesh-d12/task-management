@@ -25,6 +25,13 @@ const taskSchema = gql`
     issueType: String!
   }
 
+    input TaskStateInput {
+    id: [ID]!
+    taskState: String!
+  }
+
+
+
   type AddTaskResponse {
     success: Boolean!
     message: String!
@@ -46,10 +53,18 @@ const taskSchema = gql`
     getTasks: [Task]
   }
 
+   type UpdateTasksStateResponse {
+    success: Boolean!
+    message: String!
+    modifiedCount: Int
+    error: String
+  }
+
   type Mutation {
     addTask(taskInput: TaskInput!): AddTaskResponse!
     updateTask(taskInput: TaskInput!): AddTaskResponse!
     deleteTask(deleteInput: DeleteInput!): DeleteTaskResponse!
+    updateTasksState(updateStateInput: TaskStateInput!): UpdateTasksStateResponse!
   }
 `;
 

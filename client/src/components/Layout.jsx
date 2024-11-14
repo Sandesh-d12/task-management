@@ -3,7 +3,7 @@ import React from 'react';
 
 const Layout = ({ children }) => {
   return (
-    <div className='mt-20 p-10'>
+    <div className='mt-10 p-10'>
       {children}
     </div>
   );

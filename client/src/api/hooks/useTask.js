@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useLazyQuery } from "@apollo/client";
-import { CREATE_TASK, DELETE_TASK, GET_TASKS, UPDATE_TASK } from "../gql/queries/task";
+import { CREATE_TASK, DELETE_TASK, GET_TASKS, UPDATE_TASK, UPDATE_TASK_STATE } from "../gql/queries/task";
 import { toast } from "react-hot-toast";
 import { setTasks } from "../../redux/taskSlice";
 import { useDispatch } from "react-redux";
@@ -126,4 +126,28 @@ export const useDeleteTask = () => {
   };
 
   return { handleDeleteTask, data, loading, error };
+};
+
+export const useUpdateTasksState = () => {
+  const [updateTasks, { data, loading, error }] = useMutation(UPDATE_TASK_STATE);
+
+  const handleUpdateTasksState = async ({ id, taskState = "done" }) => {
+    console.log(id)
+    try {
+      await updateTasks({
+        variables: {
+          updateStateInput: {
+            
+            id,         
+            taskState,  
+          },
+        },
+      });
+      toast.success("Tasks state updated successfully!");
+    } catch (err) {
+      toast.error(err.message || "Failed to update tasks state");
+    }
+  };
+
+  return { handleUpdateTasksState, data, loading, error };
 };

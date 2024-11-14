@@ -32,8 +32,17 @@ const logIn = async ({ email, password }) => {
   return { id: user.id, email: user.email, token, name: user.name };
 };
 
+const getUsers = async () => {
+  const users = await User.find({}, { password: 0, token:0 })
+  if(users){
+    console.log(users)
+    return users;
+  }throw new Error('Can not find users')
+};
+
 // signUp("ram", "sss", "123")
 module.exports = {
   signUp,
   logIn,
+  getUsers
 };

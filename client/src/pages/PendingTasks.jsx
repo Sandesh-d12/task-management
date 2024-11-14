@@ -5,22 +5,23 @@ import Table from "../components/Table";
 import { useSelector } from "react-redux";
 import { useGetUsers } from "../api/hooks/useAuth";
 
-function TaskList() {
+function PendingTasks() {
   const { allTask, loading, error } = useGetTask();
 
   const [data, setData] = useState(allTask);
   useEffect(() => {
-    setData(allTask);
+    const pendingTasks = allTask?.filter((item)=> item.taskState !== "done")
+    setData(pendingTasks);
   }, [allTask]);
 
   return (
     <Layout>
       <div className="flex flex-col items-center justify-center w-full">
-        <p style={{ fontSize: "2rem", fontWeight: 500 }}>Task List</p>
+        <p style={{ fontSize: "2rem", fontWeight: 500 }}>Pending Tasks</p>
         <Table d={data} />
       </div>
     </Layout>
   );
 }
 
-export default TaskList;
+export default PendingTasks;

@@ -1,4 +1,6 @@
 const Task = require("../database/model/Task");
+const mongoose = require("mongoose");
+
 
 const addTask = async ({
   title,
@@ -91,6 +93,61 @@ const updateTask = async (data) => {
   }
 };
 
+
+const updateTasksState = async (tasks) => {
+  const {id, taskState} = tasks;
+  if (mongoose.connection.readyState !== 1) {
+    console.error("Database is not connected");
+    return { success: false, message: "Database not connected" };
+  }
+  // Continue with the update if connected
+  try {
+    const result = await Task.updateMany(
+      { _id: { $in: id } },
+      { taskState }
+    );
+    return {
+      success: true,
+      message: `${result.modifiedCount} tasks updated successfully!`,
+    };
+  } catch (error) {
+    console.error("Error updating tasks:", error.message);
+    return {
+      success: false,
+      message: "Failed to update tasks",
+      error: error.message,
+    };
+  }
+};
+
+// const updateTasksState = async (taskIds, taskState) => {
+//   if (mongoose.connection.readyState !== 1) {
+//     console.error("Database is not connected");
+//     return { success: false, message: "Database not connected" };
+//   }
+//   // Continue with the update if connected
+//   try {
+//     const result = await Task.updateMany(
+//       { _id: { $in: taskIds } },
+//       { taskState }
+//     );
+//     return {
+//       success: true,
+//       message: `${result.modifiedCount} tasks updated successfully!`,
+//     };
+//   } catch (error) {
+//     console.error("Error updating tasks:", error.message);
+//     return {
+//       success: false,
+//       message: "Failed to update tasks",
+//       error: error.message,
+//     };
+//   }
+// };
+
+
+
+
 const deleteTask = async (data) => {
   try {
     const deletedTask = await Task.findByIdAndDelete(data?.id);
@@ -114,10 +171,15 @@ const deleteTask = async (data) => {
     };
   }
 };
+const taskIds = ['67335ca404c4e75700db9d81', '67335cb404c4e75700db9d83'];
+const taskState = 'done';
+// updateTasksState(taskIds, taskState);
+// deleteTask('67335ca404c4e75700db9d81')
 
 module.exports = {
   addTask,
   getTasks,
   updateTask,
   deleteTask,
+  updateTasksState
 };

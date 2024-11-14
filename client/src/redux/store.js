@@ -13,6 +13,7 @@ import storage from "redux-persist/lib/storage";
 import { combineReducers } from "redux";
 import authReducer from "./authSlice";
 import taskReducer from "./taskSlice";
+import userReducer from './userSlice'
 
 // Create a persist configuration
 const persistConfig = {
@@ -24,6 +25,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   auth: authReducer,
   task: taskReducer,
+  users:userReducer
 });
 
 // Create a persisted reducer
