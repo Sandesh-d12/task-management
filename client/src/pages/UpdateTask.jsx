@@ -6,18 +6,21 @@ import CustomInput from "../components/input/CustomInput";
 import { Select } from "../components/input/Select";
 import { Form, Formik } from "formik";
 import Button from "../components/button/Button";
-import { validationSchema, issueOptions, taskOptions } from "./AddTask";
+import { validationSchema, issueOptions, taskOptions, priorityOptions } from "./AddTask";
 import ConfirmModal from "../components/modal/Modal";
 import { useUpdateTask } from "../api/hooks/useTask";
+import Loading from "../components/Loading";
+import { useSelector } from "react-redux";
 
 export const UpdateTask = () => {
   const { id } = useParams();
   const data = useGetTaskFromId(id);
+  const users = useSelector((state) => state.users.data);
   const [updatedData, setUpdatedData] = useState();
   const [confirmationOpen, setConfirmationOpen] = useState(false);
-  const { handleUpdateTask } = useUpdateTask();
+  const { handleUpdateTask, loading, error } = useUpdateTask();
+  const [showUpdateButton, setShowUpdateButton] = useState(false)
 
-  // Set initial values directly from data
   const initialValues =
     data?.length > 0
       ? {
@@ -52,9 +55,18 @@ export const UpdateTask = () => {
     setConfirmationOpen(false);
   };
 
+   const handleUpdate = () =>{
+setShowUpdateButton(true)
+  }
+
   return (
     <Layout>
+      {
+        loading && <Loading />
+      }
       <div className="flex flex-col items-center justify-center">
+     {!showUpdateButton && <Button handleClick={handleUpdate} text="Update" /> }
+
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -63,22 +75,48 @@ export const UpdateTask = () => {
         >
           {(formik) => (
             <Form className="w-1/6">
-              <CustomInput type="text" label="Title" name="title" />
-              <CustomInput type="text" label="Content" name="content" />
-              <CustomInput type="text" label="Priority" name="priority" />
-              <CustomInput type="text" label="Assignee" name="assignee" />
-              <CustomInput type="text" label="Estimation" name="estimation" />
+              <CustomInput type="text" label="Title" name="title" disabled={!showUpdateButton}/>
+              <CustomInput type="text" label="Content" name="content" disabled={!showUpdateButton}/>
               <Select
-                option={taskOptions}
+                option={priorityOptions.filter((item)=>{
+                  return(
+                    item.label !== 'Select One'
+                  )
+                })}
+                name="priority"
+                label="Priority"
+                disabled={!showUpdateButton}
+              />
+              <Select
+                option={users?.map((user) => ({
+                  label: user?.name,
+                  value: user?.name,
+                }))}
+                name="assignee"
+                label="Assignee"
+                disabled={!showUpdateButton}
+              />
+              <CustomInput type="text" label="Estimation" name="estimation" disabled={!showUpdateButton}/>
+              <Select
+                option={taskOptions.filter((item)=>{
+                  return(
+                    item.label !== 'Select One'
+                  )
+                })}
                 name="taskState"
                 label="Task State"
+                disabled={!showUpdateButton}
               />
               <Select
                 option={issueOptions}
                 name="issueType"
                 label="Issue Type"
+                disabled={!showUpdateButton}
               />
-              <Button type="submit" text="Update" />
+              <div style={{display:"flex", justifyContent:"space-between"}}>
+              {showUpdateButton && <Button type="submit" text="Submit" /> }
+              {showUpdateButton && <Button handleClick={()=>setShowUpdateButton(false)} text="Cancel" /> }
+              </div>
             </Form>
           )}
         </Formik>

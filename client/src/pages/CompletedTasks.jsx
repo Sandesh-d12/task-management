@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import { useGetTask } from "../api/hooks/useTask";
 import Table from "../components/Table";
+import Loading from "../components/Loading";
 
 
 function CompletedTasks() {
@@ -15,9 +16,10 @@ function CompletedTasks() {
 
   return (
     <Layout>
+      {loading && <Loading />}
       <div className="flex flex-col items-center justify-center w-full">
         <p style={{ fontSize: "2rem", fontWeight: 500 }}>Completed Tasks</p>
-        <Table d={data} />
+        <Table d={data} variant="completed" />
       </div>
     </Layout>
   );

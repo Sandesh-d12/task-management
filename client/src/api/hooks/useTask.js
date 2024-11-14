@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useLazyQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_TASK, DELETE_TASK, GET_TASKS, UPDATE_TASK, UPDATE_TASK_STATE } from "../gql/queries/task";
 import { toast } from "react-hot-toast";
 import { setTasks } from "../../redux/taskSlice";
@@ -58,7 +58,7 @@ export const useGetTaskFromId = (id) => {
   }
 };
 
-export const useUpdateTask = () => {
+export const useUpdateTask = (refetchTasks) => {
   const [updateTask, { data, loading, error }] = useMutation(UPDATE_TASK);
 
   const handleUpdateTask = async ({
@@ -90,6 +90,9 @@ export const useUpdateTask = () => {
         },
       });
       toast.success("task updated successfully");
+      if (refetchTasks) {
+        await refetchTasks();
+      }
     } catch (err) {
       toast.error(err.message);
     }
@@ -129,7 +132,11 @@ export const useDeleteTask = () => {
 };
 
 export const useUpdateTasksState = () => {
-  const [updateTasks, { data, loading, error }] = useMutation(UPDATE_TASK_STATE);
+  const [updateTasks, { data, loading, error }] = useMutation(UPDATE_TASK_STATE, {
+    refetchQueries: [{ query: GET_TASKS }],
+    awaitRefetchQueries: true,
+
+  });
 
   const handleUpdateTasksState = async ({ id, taskState = "done" }) => {
     console.log(id)
@@ -145,7 +152,7 @@ export const useUpdateTasksState = () => {
       });
       toast.success("Tasks state updated successfully!");
     } catch (err) {
-      toast.error(err.message || "Failed to update tasks state");
+      toast.error("Failed to update tasks state");
     }
   };
 

@@ -8,6 +8,7 @@ import Button from "../components/button/Button.jsx";
 import { Select } from "../components/input/Select.jsx";
 import ConfirmModal from "../components/modal/Modal.jsx";
 import { useSelector } from "react-redux";
+import Loading from "../components/Loading.jsx";
 export const validationSchema = Yup.object({
   title: Yup.string().required("Title is required"),
   content: Yup.string().required("Content is required"),
@@ -131,6 +132,9 @@ function AddTask() {
 
   return (
     <Layout>
+      {
+        loading && <Loading />
+      }
       <div className="flex items-center justify-center w-full mt-5">
         <Formik
           initialValues={initialValues}

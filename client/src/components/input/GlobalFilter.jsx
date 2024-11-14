@@ -9,7 +9,7 @@ function GlobalFilter({ filter, setFilter }) {
 //   }, 300);
 
   return (
-    <div style={{width:"100%"}}>
+    <div>
         Search:{" "}
         <input
           value={filter || ""}
@@ -18,7 +18,7 @@ function GlobalFilter({ filter, setFilter }) {
             // handleChange(e.target.value);
           }}
           placeholder="Search..."
-          className="mt-1 w-1/5 rounded-md border border-gray-500 shadow-sm sm:text-sm py-2 px-2"
+          className="mt-1 rounded-md border border-gray-500 shadow-sm sm:text-sm py-2 px-2"
         />
     </div>
   );

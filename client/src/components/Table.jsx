@@ -13,14 +13,14 @@ import GlobalFilter from "./input/GlobalFilter";
 import ColumnFilter from "./ColumnFilter";
 import Checkbox from "./input/Checkbox";
 import Trash from "./icons/Trash";
-import Pencil from "./icons/Pencil";
 import { useDeleteTask } from "../api/hooks/useTask";
 import Up from "./icons/Up";
 import Down from "./icons/Down";
 import { convertTimeToDate } from "../utils";
 import { useUpdateTasksState } from "../api/hooks/useTask";
+import Eye from "./icons/Eye";
 
-function Table({ d }) {
+function Table({ d, variant="all" }) {
   const navigate = useNavigate();
   const location = useLocation();
   const { handleUpdateTasksState } = useUpdateTasksState();
@@ -29,7 +29,6 @@ function Table({ d }) {
   const [open, setOpen] = useState(null);
   const [id, setId] = useState("");
   const queryParams = new URLSearchParams(location.search);
-
   const initialPage = parseInt(queryParams.get("page") || "1", 10) - 1;
   const handleDelete = () => {
     setOpen(false);
@@ -42,10 +41,10 @@ function Table({ d }) {
       accessor: "title",
       disableFilters: true,
     },
-    // {
-    //   Header: "Description",
-    //   accessor: "content",
-    // },
+    {
+      Header: "Current State",
+      accessor: "taskState",
+    },
     {
       Header: "Priority",
       accessor: "priority",
@@ -67,7 +66,7 @@ function Table({ d }) {
       Header: "Actions",
       disableSortBy: true,
       Cell: ({ row }) => (
-        <div style={{ display: "flex", justifyContent: "center", gap: "3rem" }}>
+        <div style={{ display: "flex", justifyContent: "center", gap: "2rem" }}>
           <button
             onClick={() => {
               setOpen(true);
@@ -76,9 +75,7 @@ function Table({ d }) {
           >
             <Trash />
           </button>
-          <button onClick={() => navigate(`update-task/${row?.original?.id}`)}>
-            <Pencil />
-          </button>
+          <button  onClick={() => navigate(`/update-task/${row?.original?.id}`)}><Eye /></button>
         </div>
       ),
     },
@@ -112,7 +109,7 @@ function Table({ d }) {
           {
             id: "selection",
             Header: ({ getToggleAllRowsSelectedProps }) => (
-              <Checkbox {...getToggleAllRowsSelectedProps} />
+              <Checkbox {...getToggleAllRowsSelectedProps()} />
             ),
             disableSortBy: true,
             Cell: ({ row }) => (
@@ -150,10 +147,10 @@ handleUpdateTasksState({id:selectedTasksId, taskState:"done"})
 }
 
   return (
-    <div style={{ maxWidth: "1328px", width: "100%" }}>
-      <div style={{ display: "flex", gap: "3rem" }}>
+    <div style={{ maxWidth: "1328px", width: "100%", display:"flex", flexDirection:"column", gap:"1rem" }}>
+      <div style={{ display: "flex", gap: "1rem" }}>
         <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
-        {selectedFlatRows.length > 0 && (
+        {selectedFlatRows.length > 0 &&(
           <>
           <button
             onClick={() => {
@@ -163,9 +160,10 @@ handleUpdateTasksState({id:selectedTasksId, taskState:"done"})
           >
             <Trash />
           </button>
-          <button onClick={handleUpdateTaskState}>update state</button>
+      
           </>
         )}
+           {selectedFlatRows.length > 0 && variant==="pending" && <button onClick={handleUpdateTaskState}>update state</button> }
       </div>
       <table {...getTableProps()}>
         <thead>
@@ -177,7 +175,7 @@ handleUpdateTasksState({id:selectedTasksId, taskState:"done"})
                   {!col.disableSortBy && (
                     <button
                       onClick={col.getSortByToggleProps().onClick}
-                      className="ml-2 p-1 bg-white text-white rounded"
+                      className="ml-2 bg-white text-white rounded overflow-hidden"
                       title={`Sort by ${col.render("Header")}`}
                     >
                       <div
@@ -188,7 +186,7 @@ handleUpdateTasksState({id:selectedTasksId, taskState:"done"})
                           padding: "4px",
                           alignItems: "center",
                           justifyContent: "center",
-                          width: "60px",
+                          maxWidth: "60px",
                         }}
                       >
                         <span style={{ fontWeight: "300", fontSize: "0.9rem" }}>
@@ -255,7 +253,7 @@ handleUpdateTasksState({id:selectedTasksId, taskState:"done"})
           Next
         </button>
       </div>
-      <pre>
+      {/* <pre>
         <code>
           {JSON.stringify(
             {
@@ -266,7 +264,7 @@ handleUpdateTasksState({id:selectedTasksId, taskState:"done"})
             2
           )}
         </code>
-      </pre>
+      </pre> */}
     </div>
   );
 }

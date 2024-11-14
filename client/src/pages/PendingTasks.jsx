@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import { useGetTask } from "../api/hooks/useTask";
 import Table from "../components/Table";
-import { useSelector } from "react-redux";
-import { useGetUsers } from "../api/hooks/useAuth";
+import Loading from "../components/Loading";
+
 
 function PendingTasks() {
   const { allTask, loading, error } = useGetTask();
@@ -16,9 +16,10 @@ function PendingTasks() {
 
   return (
     <Layout>
+      {loading && <Loading />}
       <div className="flex flex-col items-center justify-center w-full">
         <p style={{ fontSize: "2rem", fontWeight: 500 }}>Pending Tasks</p>
-        <Table d={data} />
+        <Table d={data} variant={"pending"}/>
       </div>
     </Layout>
   );

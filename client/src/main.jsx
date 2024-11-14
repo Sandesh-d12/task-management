@@ -38,7 +38,7 @@ createRoot(document.getElementById("root")).render(
       <PersistGate persistor={persistor}>
         <ApolloProvider client={client}>
           <BrowserRouter>
-            <Toaster />
+            <Toaster/>
             <App />
           </BrowserRouter>
         </ApolloProvider>

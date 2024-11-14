@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import Layout from "../../components/Layout";
 import CustomInput from "../../components/input/CustomInput";
 import { Form, Formik } from "formik";
+import Loading from "../../components/Loading";
 
 const Signup = () => {
   const { handleRegisterUser, data, loading, error } = useAuth();
@@ -30,6 +31,9 @@ const Signup = () => {
   };
   return (
     <div className="mt-20 p-4 flex items-center justify-center">
+      {
+        loading && <Loading />
+      }
       <div className="flex items-center justify-center flex-col bg-custom-gradient w-1/4 rounded-lg p-2 pb-6">
       <h2 style={{ textAlign: "center" }}>Sign Up</h2>
       <div
@@ -57,43 +61,6 @@ const Signup = () => {
           </Form>
         </Formik>
       </div>
-      {/* <form
-        onSubmit={handleSubmit}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-          <label>Email:</label>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-          <CustomInput type="email" label="Email" name="email"/>
-
-          <input
-            type="text"
-            placeholder="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button type="submit" disabled={loading}>
-            {loading ? "Signing up..." : "Sign Up"}
-          </button>
-          {error && <p style={{ color: "red" }}>{error.message}</p>}
-          {data && <p>Signup successful! Welcome, {data.register.email}</p>}
-        </div>
-      </form> */}
     </div>
     </div>
   );

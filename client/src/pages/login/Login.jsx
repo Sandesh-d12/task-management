@@ -3,6 +3,7 @@ import { useAuth } from "../../api/hooks/useAuth";
 import { Form, Formik, } from 'formik'
 import * as Yup from 'yup'
 import CustomInput from "../../components/input/CustomInput";
+import Loading from "../../components/Loading";
 
 const Login= () => {
   const { handleLogin, userData, loginLoading, loginError } = useAuth();
@@ -25,6 +26,9 @@ const Login= () => {
   const onSubmit = values =>  handleSubmit(values)
   return (
     <div className="mt-20 p-4 flex items-center justify-center">
+      {
+        loginLoading && <Loading />
+      }
       <div className="flex items-center justify-center flex-col bg-custom-gradient w-1/4 rounded-lg p-2 pb-6">
       <h1>Login</h1>
     <div className="flex items-center justify-center ">
