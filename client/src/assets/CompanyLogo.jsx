@@ -27,3 +27,30 @@ function CompanyLogo() {
 }
 
 export default CompanyLogo;
+
+
+// const handleSubmit = (values) => {
+//   mutate({
+//     variables: {
+//       _id: data?.organizationById._id ?? '',
+//       description: values.description,
+//       country: values.country,
+//       currency: values.currency,
+//     },
+//     onCompleted() {
+//       toast.success('Company details updated successfully');
+//     },
+//     onError() {
+//       toast.error('Something went wrong');
+//     },
+//     refetchQueries: [
+//       {
+//         query: COMPANY,
+//         variables: {
+//           organizationId: orgID,
+//           type: type.toUpperCase(),
+//         },
+//       },
+//     ],
+//   });
+// };
