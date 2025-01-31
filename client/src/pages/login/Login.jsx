@@ -17,7 +17,6 @@ const Login = () => {
   const handleSubmit = (values) => {
     const { email, password } = values;
     handleLogin({ email, password });
-    toast.success("Successfully logged in");
   };
 
   const validationSchema = Yup.object({
