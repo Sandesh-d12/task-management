@@ -1,0 +1,15 @@
+{
+    "version": 2,
+    "functions": {
+      "api/graphql.js": {
+        "runtime": "nodejs18.x"
+      }
+    },
+    "env": {
+      "MONGODB_URI": "@my-mongodb-uri"
+    },
+    "routes": [
+      { "src": "/api/graphql", "dest": "/api/graphql.js" }
+    ]
+  }
+  
