@@ -1,10 +1,10 @@
 import { gql, useMutation } from "@apollo/client";
 
 export const GET_TASKS = gql`
-  query {
-    getTasks {
-    id
-       title
+  query GetTasks($projectId: String!) { 
+    getTasks(projectId: $projectId) {   
+      id
+      title
       content
       priority
       assignee
@@ -12,6 +12,7 @@ export const GET_TASKS = gql`
       taskState
       issueType
       createdAt
+      projectId
     }
   }
 `;
@@ -32,6 +33,7 @@ export const CREATE_TASK = gql`
       issueType
       createdAt
       updatedAt
+      projectId
     }
     error
     }

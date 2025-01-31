@@ -5,6 +5,8 @@ import { Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { clearToken } from "../redux/authSlice";
 import Button from "./button/Button";
+import { toast } from "react-hot-toast";
+
 
 export default function Profile({ title = "Profile" }) {
   const user = useSelector((state) => state?.auth?.data);

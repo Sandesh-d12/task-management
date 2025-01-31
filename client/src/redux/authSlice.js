@@ -6,7 +6,9 @@ const authSlice = createSlice({
     token: null,
     data:{},
     isAuthenticated: false,
-  },
+    project:{},
+    currentProject: "",
+    },
   reducers: {
     setToken: (state, action) => {
       state.token = action.payload;
@@ -18,9 +20,15 @@ const authSlice = createSlice({
     },
     setUser:(state, action) => {
       state.data = action.payload;
+    },
+    setProject:(state, action)=>{
+      state.project = action.payload
+    },
+    setCurrentProject:(state, action)=>{
+      state.currentProject = action.payload
     }
   },
 });
 
-export const { setToken, clearToken, setUser } = authSlice.actions;
+export const { setToken, clearToken, setUser, setProject, setCurrentProject } = authSlice.actions;
 export default authSlice.reducer;

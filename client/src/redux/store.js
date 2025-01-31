@@ -14,6 +14,7 @@ import { combineReducers } from "redux";
 import authReducer from "./authSlice";
 import taskReducer from "./taskSlice";
 import userReducer from './userSlice'
+import projectReducer from './projectSlice'
 
 // Create a persist configuration
 const persistConfig = {
@@ -25,7 +26,8 @@ const persistConfig = {
 const rootReducer = combineReducers({
   auth: authReducer,
   task: taskReducer,
-  users:userReducer
+  users:userReducer,
+  projects: projectReducer
 });
 
 // Create a persisted reducer
