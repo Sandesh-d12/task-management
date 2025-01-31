@@ -2,10 +2,12 @@ import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_TASK, DELETE_TASK, GET_TASKS, UPDATE_TASK, UPDATE_TASK_STATE } from "../gql/queries/task";
 import { toast } from "react-hot-toast";
 import { setTasks } from "../../redux/taskSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 
 export const useCreateTask = () => {
   const [createTask, { data, loading, error }] = useMutation(CREATE_TASK);
+  const projectId = useSelector((state) => state?.auth?.currentProject);
 
   const handleCreateTask = async ({
     title,
@@ -16,11 +18,13 @@ export const useCreateTask = () => {
     taskState,
     issueType,
     taskMonth,
+    // projectId
   }) => {
     try {
       await createTask({
         variables: {
           taskInput: {
+            projectId,
             title,
             content,
             priority,
@@ -41,14 +45,31 @@ export const useCreateTask = () => {
   return { handleCreateTask, data, loading, error };
 };
 
-export const useGetTask = () => {
-  const { data, loading, error } = useQuery(GET_TASKS);
-  const dispatch = useDispatch();
-  const allTask = data ? data.getTasks : null;
-  dispatch(setTasks(allTask));
-  return { allTask, loading, error };
-};
+// export const useGetTask = () => {
+//   const { data, loading, error } = useQuery(GET_TASKS);
+//   const dispatch = useDispatch();
+//   const allTask = data ? data.getTasks : null;
+//   dispatch(setTasks(allTask));
+//   return { allTask, loading, error };
+// };
 
+export const useGetTask = (projectId) => {
+  const dispatch = useDispatch();
+
+  const { data, loading, error } = useQuery(GET_TASKS, {
+    variables: { projectId }, 
+    skip: !projectId,  // ✅ Prevents query from running if projectId is undefined
+    fetchPolicy: "network-only",  // ✅ Always fetch fresh data
+  });
+
+  useEffect(() => {
+    if (data?.getTasks) {
+      dispatch(setTasks(data.getTasks));
+    }
+  }, [data, dispatch]);
+console.log(data)
+  return { tasks: data?.getTasks || [], loading, error };
+};
 export const useGetTaskFromId = (id) => {
   const { data, loading, error } = useQuery(GET_TASKS);
   const allTask = data ? JSON.parse(JSON.stringify(data?.getTasks)) : null;

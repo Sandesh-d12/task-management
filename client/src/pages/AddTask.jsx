@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useCreateTask } from "../api/hooks/useTask.js";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
@@ -9,6 +9,7 @@ import { Select } from "../components/input/Select.jsx";
 import ConfirmModal from "../components/modal/Modal.jsx";
 import { useSelector } from "react-redux";
 import Loading from "../components/Loading.jsx";
+// import { getUserAssociatedProjectId } from "../utils/index.js";
 export const validationSchema = Yup.object({
   title: Yup.string().required("Title is required"),
   content: Yup.string().required("Content is required"),
@@ -84,12 +85,21 @@ export const priorityOptions = [
   },
 ];
 
+export const getUserAssociatedProjectId  = (id, projects) => {
+  const currentProject = projects?.filter((d)=> d?.userId != id)
+  return currentProject?.id
+  }
+
 function AddTask() {
   const { handleCreateTask, loading, error } = useCreateTask();
   const users = useSelector((state) => state.users.data);
+  const userId = useSelector((state) => state?.auth?.data?.id);
+
+  const projectId = useSelector((state) => state?.auth?.currentProject);
 
   const [open, setOpen] = useState(false);
   const initialValues = {
+    // projectId:projectId,
     title: "",
     content: "",
     priority: "",
@@ -109,8 +119,10 @@ function AddTask() {
       estimation,
       taskState,
       issueType,
+      // projectId
     } = values;
     setData({
+      // projectId,
       title,
       content,
       priority,
@@ -121,14 +133,21 @@ function AddTask() {
     });
   };
 
+  useEffect(()=>{
+
+  },[data])
+
   const handleClose = () => {
     setOpen(false);
   };
 
   const handleConfirm = () => {
     setOpen(false);
+    console.log(data)
     handleCreateTask(data);
   };
+
+
 
   return (
     <Layout>

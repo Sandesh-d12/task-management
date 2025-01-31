@@ -2,7 +2,8 @@ const { addTask, getTasks, updateTask, deleteTask, updateTasksState } = require(
 
 const taskResolver = {
   Query: {
-    getTasks: async () => await getTasks(),
+    getTasks: async (_, { projectId }) => await getTasks(projectId),
+
   },
   Mutation: {
     addTask: async (_, { taskInput }) => await addTask(taskInput),

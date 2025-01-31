@@ -19,3 +19,10 @@ export function getInitials(text) {
   const firstLetter = text.trim()[0].toUpperCase();
   return firstLetter;
 }
+
+
+
+export const getUserAssociatedProjectId  = (id, projects) => {
+const currentProject = projects?.filter((d)=> d?.userId != id)
+return currentProject?.id
+}

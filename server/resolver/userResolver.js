@@ -4,7 +4,6 @@ const User = require("../database/model/User");
 const userResolver = {
   Query: {
     getAll: async () => {
-      // Ensure proper syntax for returning data
       return await User.find();
     },
   },

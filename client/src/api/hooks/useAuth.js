@@ -27,6 +27,7 @@ export const useAuth = () => {
         dispatch(setToken(token));
         dispatch(setUser(data?.login));
         toast.success("Successfully logged in");
+        navigate("/create-project");
     } catch (err) {
       toast.error("Login error:", err);
     }

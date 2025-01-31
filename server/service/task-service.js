@@ -10,6 +10,7 @@ const addTask = async ({
   estimation,
   taskState,
   issueType,
+  projectId
 }) => {
   if (
     !title ||
@@ -18,7 +19,8 @@ const addTask = async ({
     !assignee ||
     !estimation ||
     !taskState ||
-    !issueType
+    !issueType ||
+    !projectId
   ) {
     throw new Error("All fields are required");
   }
@@ -31,6 +33,7 @@ const addTask = async ({
     estimation,
     taskState,
     issueType,
+    projectId
   });
 
   try {
@@ -51,9 +54,16 @@ const addTask = async ({
     };
   }
 };
+const getTasks = async (projectId) => {
+  console.log(projectId)
 
-const getTasks = async () => {
-  return await Task.find();
+  if (!projectId) {
+    throw new Error("Project ID is required");
+  }
+
+  const tasks = await Task.find({ projectId }); 
+  console.log(tasks)
+  return tasks
 };
 
 const updateTask = async (data) => {
@@ -100,7 +110,6 @@ const updateTasksState = async (tasks) => {
     console.error("Database is not connected");
     return { success: false, message: "Database not connected" };
   }
-  // Continue with the update if connected
   try {
     const result = await Task.updateMany(
       { _id: { $in: id } },
@@ -119,32 +128,6 @@ const updateTasksState = async (tasks) => {
     };
   }
 };
-
-// const updateTasksState = async (taskIds, taskState) => {
-//   if (mongoose.connection.readyState !== 1) {
-//     console.error("Database is not connected");
-//     return { success: false, message: "Database not connected" };
-//   }
-//   // Continue with the update if connected
-//   try {
-//     const result = await Task.updateMany(
-//       { _id: { $in: taskIds } },
-//       { taskState }
-//     );
-//     return {
-//       success: true,
-//       message: `${result.modifiedCount} tasks updated successfully!`,
-//     };
-//   } catch (error) {
-//     console.error("Error updating tasks:", error.message);
-//     return {
-//       success: false,
-//       message: "Failed to update tasks",
-//       error: error.message,
-//     };
-//   }
-// };
-
 
 
 

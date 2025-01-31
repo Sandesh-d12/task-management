@@ -12,6 +12,7 @@ const taskSchema = gql`
     issueType: String!
     createdAt: String
     updatedAt: String
+    projectId: String
   }
 
   input TaskInput {
@@ -23,14 +24,13 @@ const taskSchema = gql`
     estimation: String!
     taskState: String!
     issueType: String!
+    projectId: String!
   }
 
-    input TaskStateInput {
+  input TaskStateInput {
     id: [ID]!
     taskState: String!
   }
-
-
 
   type AddTaskResponse {
     success: Boolean!
@@ -49,11 +49,12 @@ const taskSchema = gql`
     id: String!
   }
 
-  type Query {
-    getTasks: [Task]
+ type Query {
+    getTasks(projectId: String!): [Task]!
   }
 
-   type UpdateTasksStateResponse {
+
+  type UpdateTasksStateResponse {
     success: Boolean!
     message: String!
     modifiedCount: Int
@@ -64,7 +65,9 @@ const taskSchema = gql`
     addTask(taskInput: TaskInput!): AddTaskResponse!
     updateTask(taskInput: TaskInput!): AddTaskResponse!
     deleteTask(deleteInput: DeleteInput!): DeleteTaskResponse!
-    updateTasksState(updateStateInput: TaskStateInput!): UpdateTasksStateResponse!
+    updateTasksState(
+      updateStateInput: TaskStateInput!
+    ): UpdateTasksStateResponse!
   }
 `;
 
